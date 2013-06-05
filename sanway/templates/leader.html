@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Top Five Leaders</h2>
+<div class="row">
+	<div class="span 4">
+	<table class='table table-bordered'>
+		<thead>
+			<tr>
+				<th>
+				</th>
+				<th>
+				Name
+				</th>
+				<th>
+				Goals
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for player in goal_leaders %}
+			<tr>
+				<th>
+				<img src="player/picture/{{player.player_id}}" class="img-polaroid " width="50" height="50">
+				</th>
+				<th>
+				{{player.Name}}
+				</th>
+				<th>
+				{{player.Goals}}
+				</th>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	</div>
+	<div class="span 4">
+	<table class='table table-bordered'>
+		<thead>
+			<tr>
+				<th>
+				</th>
+				<th>
+				Name
+				</th>
+				<th>
+				Assists
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for player in assist_leaders %}
+			<tr>
+				<th>
+				<img src="player/picture/{{player.player_id}}" class="img-polaroid " width="50" height="50">
+				</th>
+				<th>
+				{{player.Name}}
+				</th>
+				<th>
+				{{player.Assists}}
+				</th>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	</div>
+	
+	<div class="span 4">
+	<table class='table table-bordered'>
+		<thead>
+			<tr>
+				<th>
+				</th>
+				<th>
+				Name
+				</th>
+				<th>
+				Points
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for player in points_leaders %}
+			<tr>
+				<th>
+				<img src="player/picture/{{player.player_id}}" class="img-polaroid " width="50" height="50">
+				</th>
+				<th>
+				{{player.Name}}
+				</th>
+				<th>
+				{{player.Points}}
+				</th>
+			</tr>
+			{% endfor %}
+			
+		</tbody>
+	</table>
+	</div>
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $('#tabs').tab();
+    });
+</script> 
+
+{% endblock %}
+     

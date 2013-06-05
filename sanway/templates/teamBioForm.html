@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<form class="form-horizontal" name="bioForm" action="/teamBio/update/"  method="post" >
+  <div class="control-group">
+    <label class="control-label" for="name">Team Name</label>
+    <div class="controls">
+      <input  class="input-small" type="text" name="name" id="name" placeholder="Maple Leafs">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="captain">Captain</label>
+    <div class="controls">
+      <input  class="input-large" type="text" name="captain" id="captain" placeholder="Mats Sundin">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="pw">Change Password</label>
+    <div class="controls">
+      <input  class="input-large" type="text" name="pw" id="pw" placeholder="B98dc">
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button  class="btn btn-small btn-primary"  type="submit" class="btn">Update</button>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

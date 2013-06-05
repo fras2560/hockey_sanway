@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Team Bio</h1>
+<h2>{{team.team_name}}</h2>
+{% for fail in error %}
+	{% if 'SUCCESS' in fail %}
+		<div class="alert alert-success show" id="submit-errors">
+  		<button type="button" id="closeAlert" class="close" data-dismiss="alert">&times;</button>
+  		<h4>{{fail}}</h4>
+		</div>
+	{% else %}
+		<div class="alert alert-error show" id="submit-errors">
+  		<button type="button" id="closeAlert" class="close" data-dismiss="alert">&times;</button>
+  		<h4>{{fail}}</h4>
+		</div>	
+	{% endif %}
+{% endfor %}
+<table class="table table-condensed" width="200" >
+	<tr><th width="200"><img src="/teamBio/picture/{{team.team_id}}" class="img-polaroid " width="200" height="200">
+		<a href="/team/change/picture" class="btn btn-mini btn-success ">Change Picture</a>
+		</th>
+	  <th>
+	   <table class="table table-condensed">
+		 <tr><th width="30">Championships: {{team.Champs_Win}}</th></tr>
+		 {% if team.goals_for %}
+		 <tr><th width="30">Goals For: {{team.goals_for}}</th></tr>
+		 {% else %}
+		 <tr><th width="30">Goals For: -- </th></tr>
+		 {% endif %}
+		 {% if team.goals_against %}
+		 <tr><th width="30">Goals Against: {{team.goals_against}}</th></tr>	
+		 {% else %}
+		 <tr><th width="30">Goals Against: -- </th></tr>
+		 {% endif %}
+		 {% if team.team_pim %}
+		 <tr><th width="30">Team PIM: {{team.team_pim}}</th></tr>	
+		 {% else %}
+		 <tr><th width="30">Team PIM: -- </th></tr>
+		 {% endif %}
+		 {% if captain %}
+		 <tr><th width="30">Captain: {{captain}}</th></tr>	
+		 {% else %}
+		 <tr><th width="30">Captain: -- </th></tr>
+		 {% endif %}		
+		<tr><td><a href="/team/change/bio" class="btn btn-mini btn-info ">Update Bio</a></td></tr>
+		</table>
+	  </th>
+	  <td>
+	  	<table class="table table-border"'>
+			<thead>
+				<tr>	
+					<th>
+					Current Roster
+					</th>
+					
+				</tr>
+			</thead>
+			<tbody>
+			{% for player in players  %}
+				<tr><td width="30">
+				<a href ="/player/{{player.player_id}}">{{player.player_name}}</a>
+				</td></tr>
+			{% endfor %}
+			<tr><td>
+				<a href="/team/change/roster" class="btn btn-large btn-warning ">Roster Changes</a>
+			</td></tr>
+			</tbody>
+		</table>
+	  </td>
+	</tr>
+</table>
+
+{% endblock %}
+<h1>DONE</h1>

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>All the Teams</h1>
+{% for team in teams %}
+<div><p><a href ="/teams/{{team.team_id}}"><b>{{team.team_name}}</b></a></p></div>
+{% endfor %}
+{% endblock %}
+<h1>DONE</h1>

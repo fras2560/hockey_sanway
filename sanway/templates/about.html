@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>A little about the Sanway App</h1>
+
+<div id="content">
+    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+        <li class="active"><a href="#History" data-toggle="tab">History</a></li>
+        <li><a href="#App" data-toggle="tab">App</a></li>
+        <li><a href="#FAQ" data-toggle="tab">FAQ</a></li>
+        <li><a href="#contact" data-toggle="tab">Contact</a></li>
+        
+    </ul>
+    <div id="my-tab-content" class="tab-content">
+        <div class="tab-pane active" id="History">
+            <h1>History</h1>
+            <p>A annual ball hockey tournament that started in 2007. Has ran for six years and has had over a hundred players including a NHLer
+            <br>Can look at the champions for each year by going to the championship tabs.
+            </p>
+        </div>
+        <div class="tab-pane" id="App">
+            <h2>App</h2>
+            <p>This app has been created by Dallas Fraser. It aims to give access to the Sanway Database and allow easy access to player stats and team infomation
+            <br>This is the second app Dallas Fraser has created for Sanway. This app is using Flask Micro Framework with BootStrap CSS in Python 2.7
+            </p>
+        </div>
+        <div class="tab-pane" id="FAQ">
+            <h2>FAQ</h2>
+            <p>Feel Free To ask some</p>
+        </div>
+        <div class="tab-pane" id="contact">
+            <h2>Contact Info</h2>
+            <p>To contact:
+            <br>fras2560@mylaurier.ca
+            <br>Subject Sanway Database
+            <br> Provide any errors that are seen or state your suggestion to improve the app
+            </p>
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $('#tabs').tab();
+    });
+</script> 
+{% endblock %}
+
+
+<h1>DONE</h1>

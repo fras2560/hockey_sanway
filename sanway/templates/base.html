@@ -1,0 +1,67 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{title}} - Sanway</title>
+    {% else %}
+    <title>Sanway</title>
+    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+ 	<link href="{{ url_for('static', filename="bootstrap/css/bootstrap.min.css") }}" rel="stylesheet">
+ 	<link href="{{ url_for('static', filename="bootstrap/css/bootstrap-responsive.min.css") }}" rel="stylesheet">
+   </head>
+  <body>
+  	<a href="/index/">
+  	<div id='logo' align="center">
+ 		<img src="{{url_for('static', filename="banner.jpg")}}" width="1200" height="50" border="0" alt=""></a> 
+ 	</div>
+ 	<script src="http://code.jquery.com/jquery.js"></script>
+    <script src="{{url_for('static', filename="bootstrap/js/bootstrap.min.js") }}"></script>
+	<script src="/twitter-bootstrap/twitter-bootstrap-v2/js/bootstrap-tooltip.js"></script>  
+	<script src="/twitter-bootstrap/twitter-bootstrap-v2/js/bootstrap-popover.js"></script>
+	<div class="container">
+    	<div class="navbar">
+  			<div class="navbar-inner">
+	 			<a class="brand" href="/index">Home</a>
+     			<a class="brand" href="/players">Players</a>
+     			<a class="brand" href="/teams">Teams</a>
+     			<a class="brand" href="/news">News</a>
+				<a class="brand" href="/playerBio/">Player Page</a>
+				<a class="brand" href="/teamBio/">Team Page</a>     			
+    			<a class="brand" href="/leaders">Leaders</a>
+    			<a class="brand" href="/championships">Champs</a>     			
+    			<a class="brand" href="/player/graph">Graph</a>
+    			     			
+    			<div class="btn-group">
+				  <a class="btn btn-primary btn-small dropdown-toggle" data-toggle="dropdown" href="#">
+					Want to Join?
+				    <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+   					<!-- dropdown menu links -->
+   					<a href="/team/join">Start Team</a> 
+   					<a href="/player/join">Start Player Account</a>
+   					 
+					</ul>
+					</div>
+    			     			
+    		 </div>
+		</div> 
+    </div>
+	
+	<div class="container">
+	    {% block content %}{% endblock %}
+	</div>
+	
+
+   </body>
+   
+   	<a class="btn btn-mini btn-link " href="/about">About</a>
+    <a class="btn btn-mini btn-link " href="/playerLogout/">Player Logout</a>
+	<a class="btn btn-mini btn-link " href="/teamLogout/">Team Logout</a>
+	<a class="btn btn-mini btn-link " href="http://jquery.com/">jQuery</a>
+	<a class="btn btn-mini btn-link " href="http://twitter.github.io/bootstrap/">Bootstrap</a>
+	<a class="btn btn-mini btn-link " href="http://flask.pocoo.org/">Flask</a>
+	<a class="btn btn-mini btn-link " href="http://d3js.org/">D3</a>
+</html>
+

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+{% if error %}
+		<div class="alert alert-error show" id="submit-errors">
+  		<button type="button" id="closeAlert" class="close" data-dismiss="alert">&times;</button>
+  		<h4>{{error}}</h4>
+		</div>	
+{% endif %}
+<form class="form-horizontal" name="joinForm" action="/{{post}}/help/"  method="post" >
+  <div class="control-group">
+    <label class="control-label" for="user">{{user}}</label>
+    <div class="controls">
+      <input  class="input-medium" type="text" name="user" id="user" placeholder="Name">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="pw">Password</label>
+    <div class="controls">
+      <input  class="input-medium" type="text" name="pw" id="pw" placeholder="XXYYZZ ">
+    </div>
+  </div>
+    <div class="control-group">
+    <div class="controls">
+      <button  class="btn btn-small btn-primary"  type="submit" class="btn">Join</button>
+    </div>
+  </div>
+</form>
+{% endblock %}

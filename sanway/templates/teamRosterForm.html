@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<h1> Team Roster Changes</h1>
+<form class="form-horizontal" name="rosterForm" action="/team/roster/cuts/" method="post" >
+  	<div class="control-group">
+		 <label class="control-label" for="">Current Roster</label>
+    		<div class="controls">
+      			<select name="player_id">
+  					{% for teammate in roster %}
+					<option value="{{teammate.player_id}}">{{teammate.player_name}}</option>
+					{% endfor %}
+				</select>
+			</div>
+		<button type="submit" class="btn btn-danger">Cut Player</button>
+	</div>
+</form>
+
+<form class="form-horizontal" name="freeForm" action="/team/roster/adds/" method="post" >
+  	<div class="control-group">
+		 <label class="control-label" for="">Free Agents</label>
+    		<div class="controls">
+      			<select name="player_id">
+  					{% for player in players %}
+					<option value="{{player.player_id}}">{{player.player_name}}</option>
+					{% endfor %}
+				</select>
+			</div>
+		<button type="submit" class="btn btn-primary">Add Player</button>
+	</div>
+</form>
+{% endblock %}
+	

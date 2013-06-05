@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>All News</h1>
+<div class="accordion" id="news">
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#news" href="#newsOne">
+         Display
+      </a>
+  </div>
+    <div id="newsOne" class="accordion-body collapse">
+      <div class="accordion-inner">
+		{% for event in events %}
+			<li>{{event.news}}</li>
+		{% endfor %}
+      </div>
+   </div>
+ </div>
+</div>
+{% endblock %}

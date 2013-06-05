@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Welcome to Sanway App</h1>
+<div class="accordion" id="news">
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#news" href="#newsOne">
+        Recent News
+      </a>
+  </div>
+    <div id="newsOne" class="accordion-body collapse">
+      <div class="accordion-inner">
+		{% for event in events %}
+			<li>{{event.news}}</li>
+		{% endfor %}
+      </div>
+   </div>
+ </div>
+</div>
+
+<div id="myCarousel" style="width: 450px; margin: 10 auto" class="carousel slide" >
+  <!-- Carousel items -->
+  	<div class="carousel-inner">
+  		<div class="active item">
+  			<img src="/picture/14" width="500" height="400">
+  			<div class="carousel-caption">
+              <p class="lead">The Sanway Cup!</p>
+      		</div>
+  		</div>    
+  		{% for picture in pictures %}
+  		<div class="item">
+          	<img src="picture/{{picture.photo_id}}" width="500" height="400" alt="">
+          	<div class="container">
+            	<div class="carousel-caption">
+            		{% if picture['caption'] %}
+              		<p class="lead">{{picture['caption']}}</p>
+            		{% endif %}
+            	</div>
+          	</div>
+        </div>
+  		{% endfor %}
+  	</div>
+  <!-- Carousel nav -->
+  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+</div>
+
+
+
+		<script type="text/javascript">
+		$(document).ready(function () {
+			$('#myCarousel').carousel({
+				  interval: 8000
+				})
+			});
+		</script>
+{% endblock %}
+
+

@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+{% for sesh in session %}
+	<h1> {{sesh}}:{{session[sesh]}}</h1>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Championships</h2>
+<div id="content">
+    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+		{% for sanway in championship  %}
+			{% if sanway.Year == 2007 %}
+				<li class="active"><a href="#{{sanway.Year}}" data-toggle="tab">{{sanway.Year}}</a></li>
+			{% else %}
+				<li><a href="#{{sanway.Year}}" data-toggle="tab">{{sanway.Year}}</a></li>
+			{% endif %}
+		{% endfor  %}
+	</ul>
+	<div id="my-tab-content" class="tab-content">
+		{% for sanway in championship %}
+			{% if sanway.Year == 2007 %}
+				<div class="tab-pane active" id="{{sanway.Year}}">
+			{% else %}
+				<div class="tab-pane" id="{{sanway.Year}}">
+			{% endif %}
+			<h2>Team: {{sanway.Team}}</h2>
+			<h3>MVP: {{sanway.MVP}}</h3>
+			<p>Description: {{sanway.Description}}</p>
+			<h3>Team Roster</h3>
+			{% for player in players %}
+				{% if player.Year == sanway.Year %}
+				<p><a href ="player/{{player.player_id}}"><b>{{player.Player}}</b></a></p>
+				{% endif %}
+			{% endfor %}
+			</div>
+		{% endfor %}
+     </div>     
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $('#tabs').tab();
+    });
+</script> 
+
+{% endblock %}
+     

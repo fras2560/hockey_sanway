@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<form class="form-horizontal" name="bioForm" action="/bio/update/"  method="post" >
+  <div class="control-group">
+    <label class="control-label" for="yp">Years Played</label>
+    <div class="controls">
+      <input  class="input-small" type="text" name="yp" id="yp" placeholder="Since 2007">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="fp">Favourite Player</label>
+    <div class="controls">
+      <input  class="input-xxlarge" type="text" name="fp" id="fp" placeholder="Thomas Catt Mulvihill ">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="qu">Quote</label>
+    <div class="controls">
+      <input  class="input-xxlarge" type="text" name="qu" id="qu" placeholder="The playoffs separate the men from the boys, and we found out we have a lot of boys in our dressing room.">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="pw">Change Password</label>
+    <div class="controls">
+      <input  class="input-large" type="text" name="pw" id="pw" placeholder="B98dc">
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button  class="btn btn-small btn-primary"  type="submit" class="btn">Update</button>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

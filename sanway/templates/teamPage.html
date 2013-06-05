@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Team Page</h1>
+<h2>{{team.team_name}}</h2>
+<table class="table table-condensed" width="200" >
+	<tr><th width="200"><img src="picture/" class="img-polaroid " width="200" height="200"></th>
+	  <th>
+	   <table class="table table-condensed">
+		 <tr><th width="30">Championships: {{team.Champs_Win}}</th></tr>
+		 {% if team.goals_for %}
+		 <tr><th width="30">Goals For: {{team.goals_for}}</th></tr>
+		 {% else %}
+		 <tr><th width="30">Goals For: -- </th></tr>
+		 {% endif %}
+		 {% if team.goals_against %}
+		 <tr><th width="30">Goals Against: {{team.goals_against}}</th></tr>	
+		 {% else %}
+		 <tr><th width="30">Goals Against: -- </th></tr>
+		 {% endif %}
+		 {% if team.team_pim %}
+		 <tr><th width="30">Team PIM: {{team.team_pim}}</th></tr>	
+		 {% else %}
+		 <tr><th width="30">Team PIM: -- </th></tr>
+		 {% endif %}
+		 {% if captain %}
+		 <tr><th width="30">Captain: {{captain}}</th></tr>	
+		 {% else %}
+		 <tr><th width="30">Captain: -- </th></tr>
+		 {% endif %}		
+		</table>
+	  </th>
+	  <td>
+	  	<table class="table table-border"'>
+			<thead>
+				<tr><th>
+				Current Roster
+				</th></tr>
+			</thead>
+			<tbody>
+			{% for player in players  %}
+				<tr><td width="30">
+				<a href ="/player/{{player.player_id}}">{{player.player_name}}</a>
+				</td></tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	  </td>
+	</tr>
+</table>
+
+{% endblock %}
+<h1>DONE</h1>

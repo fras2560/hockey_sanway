@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Player Page</h1>
+<h2>{{user}}</h2>
+{% for fail in error %}
+	{% if 'SUCCESS' in fail %}
+		<div class="alert alert-success show" id="submit-errors">
+  		<button type="button" id="closeAlert" class="close" data-dismiss="alert">&times;</button>
+  		<h4>{{fail}}</h4>
+		</div>
+	{% else %}
+		<div class="alert alert-error show" id="submit-errors">
+  		<button type="button" id="closeAlert" class="close" data-dismiss="alert">&times;</button>
+  		<h4>{{fail}}</h4>
+		</div>	
+	{% endif %}
+{% endfor %}
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span2">
+      <img src="/playerBio/picture/{{player.player_id}}" class="img-polaroid " width="330" height="500">
+      <a href="/player/change/picture" class="btn btn-mini btn-success ">Change Picture</a>
+    </div>
+    <div class="span10">
+      <table class="table table-condensed">
+		 <tr><th>Championships: {{player.Championships}}</th></tr>
+		 <tr><th>MVP Titles: {{player.MVP_Titles}}</th></tr>
+		 {% if player.Career_Points %}
+		 <tr><th>Career Points: {{player.Career_Points}}</th></tr>
+		 {% else %}
+		 <tr><th>Career Points: 0 </th></tr>
+		 {% endif %}
+		 {% if player.Power_Ranking %}
+		 <tr><th>Power Ranking: {{player.Power_Ranking}}</th></tr>
+		 {% else %}
+		 <tr><th>Power Ranking: 0</th></tr>
+		 {% endif %}
+		 {% if team %}
+		 <tr><th>Current Team: {{team}}</th></tr>
+		 {% else %}
+		 <tr><th>Current Team: Free Agent</th></tr>
+		 {% endif %}
+		 {% if personal.quote %}
+		 <tr><th>Quote: {{personal.quote}}</th></tr>
+		 {% endif %}
+		 {% if personal.fav_player %}
+		 <tr><th>Favourite Player: {{personal.fav_player}}</th></tr>
+		 {% endif %}		
+		 {% if personal.years_played %}
+		 <tr><th>Years Played: {{personal.years_played}}</th></tr>
+		 {% endif %}		
+	   	<tr><td><a href="/player/change/bio" class="btn btn-small btn-primary">Update Bio</a></td></tr>
+	   </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
