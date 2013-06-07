@@ -6,4 +6,4 @@ Created on 2013-05-21
 #!flask/bin/python
 from sanway import app
 if __name__ == "__main__":
-    app.run()
+    app.run(debug = True)

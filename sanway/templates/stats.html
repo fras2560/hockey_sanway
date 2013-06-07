@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>
+</h1>
+<div id="content">
+    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+	    <li class="active"><a href="#{{now}}" data-toggle="tab">{{now}}</a></li>
+        {% for year in years %}
+        <li><a href="#{{year.YEAR}}" data-toggle="tab">{{year.YEAR}}</a>
+        {% endfor %}
+	</ul>
+	<div id="my-tab-content" class="tab-content">
+        <div class="tab-pane active" id="{{now}}">
+		<table class="table table-bordered sortable">
+			<thead>
+				<tr>
+					<th>
+					Name
+					</th>
+					<th>
+					Team
+					</th>
+					<th>
+					Goals
+					</th>
+					<th>
+					Assists
+					</th>
+					<th>
+					Points
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for player in current %}
+				<tr>
+					<td>
+					{{player.Name}}
+					</td>
+					<td>
+					{{player.Team}}
+					</td>
+					<td>
+					{{player.Goals}}
+					</td>
+					<td>
+					{{player.Assists}}
+					</td>
+					<td>
+					{{player.Points}}
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+        </div>
+        {% for players in player_list %}
+        <div class="tab-pane" id="{{players[0].YEAR}}">
+		<table class="table table-bordered sortable">
+			<thead>
+				<tr>
+					<th>
+					Name
+					</th>
+					<th>
+					Team
+					</th>
+					<th>
+					Goals
+					</th>
+					<th>
+					Assists
+					</th>
+					<th>
+					Points
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for player in players %}
+				<tr>
+					<td>
+					{{player.Name}}
+					</td>
+					<td>
+					{{player.Team}}
+					</td>
+					<td>
+					{{player.Goals}}
+					</td>
+					<td>
+					{{player.Assists}}
+					</td>
+					<td>
+					{{player.Points}}
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+        </div>
+        {% endfor %}
+	</div>
+{% endblock %}

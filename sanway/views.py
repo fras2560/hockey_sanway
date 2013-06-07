@@ -14,6 +14,28 @@ import json
 import datetime
 # index view function suppressed for brevity
 
+@app.route('/stats')
+def stats():
+    temp  = date.today()
+    now = temp.year
+    query = '''SELECT YEAR, Name, Goals, Points, Assists, Team from v_player_stats 
+                WHERE YEAR = %s''' % now
+    current = selectAll(query)
+    query = '''SELECT Distinct YEAR  FROM v_player_stats 
+            WHERE YEAR != Year(CURDATE())'''
+    years = selectAll(query)
+    player_list = []
+    for year in years:
+        query = '''SELECT YEAR, Name, Goals, Points, Assists, Team from v_player_stats 
+                WHERE YEAR = %s''' % year['YEAR']
+        players = selectAll(query)
+        player_list.append(players)
+    return render_template('stats.html',
+                           player_list=player_list,
+                           years=years,
+                           now=now,
+                           current=current)
+    
 @app.route('/championships')
 def champs(): 
     query = '''SELECT * FROM v_championship'''
@@ -463,6 +485,9 @@ def playerJoin():
 def playerPage(id):
     query = 'Select * from v_player where player_id = %s' % id
     player = selectOne(query)
+    query = ''' SELECT * from v_player_stats 
+            WHERE player_id = %s ORDER BY YEAR ASC''' % id
+    stats = selectAll(query)
     query = '''SELECT * FROM v_team_roster WHERE
             player_id = %s AND Year = Year(CURDATE()) ''' % id
     teamInfo = selectOne(query)
@@ -477,9 +502,9 @@ def playerPage(id):
                            title='Player Page',
                            player=player,
                            team=team,
-                           personal=personal
+                           personal=personal,
+                           stats=stats
                            )
-
 
 @app.route('/player/change/bio/update/', methods=['GET', 'POST'])
 @app.route('/bio/update/', methods=['GET', 'POST'])

@@ -38,5 +38,54 @@
 	   </table>
     </div>
   </div>
+  <br>
+	  <table class="table table-bordered sortable">
+	  <thead>
+		  <tr>
+		  	<th>
+		  	Year
+		  	</th>
+		  	<th>
+		  	Goals
+		  	</th>
+		  	<th>
+		  	Assists
+		  	</th>
+		  	<th>
+		  	Points
+		  	</th>
+		  	<th>
+		  	PIM
+		  	</th>
+		  	<th>
+	  		Points Per Game
+	  		</th>
+	  	 </tr>
+	  </thead>
+	  	<tbody>
+  	{% for year in stats %}
+  		<tr>
+  			<td>
+		  	{{year.YEAR}}
+		  	</td>
+		  	<td>
+		  	{{year.Goals}}
+		  	</td>
+		  	<td>
+		  	{{year.Assists}}
+		  	</td>
+		  	<td>
+		  	{{year.Points}}
+		  	</td>
+		  	<td>
+		  	{{year.PIM}}
+		  	</td>
+		  	<td>
+	  		{{year.Points_per_game}}
+	  		</td>
+ 		<tr> 
+  	{% endfor %}
+  	</tbody>
+  </table>
 </div>
 {% endblock %}
