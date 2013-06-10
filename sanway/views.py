@@ -12,6 +12,7 @@ from flask import session
 from datetime import date
 import json
 import datetime
+from random import randint
 # index view function suppressed for brevity
 
 @app.route('/stats')
@@ -764,3 +765,39 @@ def tree():
         team_list.append(team_dictionary)
     tree['children'] = team_list
     return json.dumps(tree)
+
+@app.route('/roster/graph')
+def rosterGraph():
+    now = datetime.datetime.now()
+    year = now.year
+    return render_template('rosterGraph.html',
+                           year=year)
+
+
+@app.route('/roster/graph/info')
+def roster_tree():
+    tree = {"name": ""}
+    query = ''' SELECT * FROM Team '''
+    teams = selectAll(query)
+    team_list = []
+    for team in teams:
+        team_dictionary = {"name":team['team_name']}
+        query = ''' SELECT * FROM v_team_roster WHERE team_id = %s 
+                AND Year = YEAR(CURDATE())''' % team['team_id']
+        players = selectAll(query)
+        player_list = []
+        for player in players:
+            player_dictionary = {"name":player['player_name'],
+                                 "size":randomNum(20, 40)}
+            player_list.append(player_dictionary)
+        if player_list == []:
+            team_dictionary['size'] = randomNum(40, 80)
+        else:
+            team_dictionary['children'] = player_list
+        team_list.append(team_dictionary)
+    tree['children'] = team_list
+    return json.dumps(tree)
+
+
+def randomNum(low, high):
+    return randint(low, high)
