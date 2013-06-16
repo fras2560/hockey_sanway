@@ -774,8 +774,8 @@ def rosterGraph():
                            year=year)
 
 
-@app.route('/roster/graph/info')
-def roster_tree():
+@app.route('/roster/graph/info/<int:year>')
+def roster_tree(year):
     tree = {"name": ""}
     query = ''' SELECT * FROM Team '''
     teams = selectAll(query)
@@ -783,7 +783,7 @@ def roster_tree():
     for team in teams:
         team_dictionary = {"name":team['team_name']}
         query = ''' SELECT * FROM v_team_roster WHERE team_id = %s 
-                AND Year = YEAR(CURDATE())''' % team['team_id']
+                AND Year = %s''' % (team['team_id'], year)
         players = selectAll(query)
         player_list = []
         for player in players:
@@ -796,6 +796,221 @@ def roster_tree():
             team_dictionary['children'] = player_list
         team_list.append(team_dictionary)
     tree['children'] = team_list
+    return json.dumps(tree)
+
+@app.route('/schedule2')
+def schedule2():
+    return render_template('schedule2.html')
+
+@app.route('/schedule2/tree')
+def schedule_info2():
+    tree = {
+          "name": "Finals",
+          "winners": [
+                      {
+                       "name": "Game 11",
+                       "winners": [
+                                   {"name": "Game 5 ",
+                                    "winners":[
+                                               {"name":"Game 1",
+                                                "winners":[ {"name": "Cock Rockets"},
+                                                           {"name": "Dirt Wheelers"}
+                                                           ]},  
+                                               {"name":"Game 2",
+                                                "winners":[ {"name": "Wheeling Nailer"},
+                                                           {"name": "The Snipeshows"}
+                                                           ]},
+                                               ]
+                                    },{"name": "Game 6 ",
+                                    "winners":[
+                                               {"name":"Game 3",
+                                                "winners":[ {"name": "Blue Team"},
+                                                           {"name": "The Cameltoes"}
+                                                           ]},  
+                                               {"name":"Game 4",
+                                                "winners":[ {"name": "The Bombsquad"},
+                                                           {"name": "Hat Trick Hero"}
+                                                           ]},
+                                               ]
+                                    }
+                                   ]
+                       }
+                      ],                 
+            "challengers": [
+                        {
+                         "name": "Game 13",
+                         "challengers":[
+                                        {"name":"Loser 11"},
+                                        {"name":"Game 12",
+                                         "challengers":[
+                                                        {"name":"Game 9",
+                                                         "challengers":[
+                                                                        {"name":"Loser 5"},
+                                                                        {"name":"Game 7",
+                                                                         "challengers":[
+                                                                                       {"name":"Loser 1"},
+                                                                                       {"name":"Loser 2"}
+                                                                                       ]}
+                                                                        ]},
+                                                        {"name":"Game 10",
+                                                         "challengers":[
+                                                                        {"name":"Loser 6"},
+                                                                        {"name":"Game 8",
+                                                                         "challengers":[
+                                                                                       {"name":"Loser 3"},
+                                                                                       {"name":"Loser 4"}
+                                                                                       ]}
+                                                                        ]
+                                                         }
+                                                        ]}
+                                        ]
+                         }                         
+                      ]
+            }
+    return json.dumps(tree)
+
+@app.route('/schedule')
+def schedule():
+    return render_template('schedule.html')
+
+@app.route('/schedule/tree')
+def schedule_info():
+    tree = {
+            "name": "W9 VS W12",
+            "born": '4:30',
+            "died": '5:30',
+            "location": "13 (Finals)",
+            "parents": [
+                        {
+                         "name": "W5 VS W6 ",
+                         "born": '3:00',
+                         "died": '3:30',
+                         "location": "9",
+                         "parents": [
+                                     {
+                                      "name": "W1 Vs W2",
+                                      "born": '12:00',
+                                      "died": '12:30',
+                                      "location": "5",
+                                      "parents":[
+                                                {
+                                                 "name": "Cock Rockets Vs Dirt Wheelers",
+                                                 "born": '10:00',
+                                                 "died": '10:30',
+                                                 "location": "1",
+                                                 },{
+                                                 "name": "Blue Team Vs The Cameltoes",
+                                                 "born": '10:30',
+                                                 "died": '11:00',
+                                                 "location": "2",
+                                                 }
+                                                 ]
+                                      },
+                                     {
+                                      "name": "W3 VS W4",
+                                      "born": '12:30',
+                                      "died": '1:00',
+                                      "location": "6",
+                                      "parents":[
+                                                 {
+                                                  "name": "Wheeling Nailer Vs The Snipe Shows",
+                                                  "born": '11:00',
+                                                  "died": '11:30',
+                                                  "location": "3",
+                                                  },
+                                                 {
+                                                  "name": "Hat Trick Hero Vs The BombSquad",
+                                                  "born": '11:30',
+                                                  "died": '12:00',
+                                                  "location": "4",
+                                                  }
+                                                 ]
+                                      }
+                                     ]
+                                     },
+                                     {
+                                      "name": "W12 VS L9",
+                                      "born": '4:00',
+                                      "died": '4:30',
+                                      "location": "12",
+                                      "parents": [
+                                                  {
+                                                   "name": "L9",
+                                                   "born": '',
+                                                   "died": '',
+                                                   "location": ""
+                                                   },
+                                                  {
+                                                   "name": "W10 VS W11",
+                                                   "born": '3:30',
+                                                   "died": '4:00',
+                                                   "location": "12",
+                                                   "parents": [
+                                                               {
+                                                                "name": "W7 VS L5",
+                                                                "born": '2:00',
+                                                                "died": '2:30',
+                                                                "location": "10",
+                                                                "parents": [  {"name": "L5",
+                                                                             "born": '',
+                                                                             "died": '',
+                                                                             "location": ""
+                                                                             },
+                                                                            {"name": "L1 VS L2",
+                                                                             "born": '1:00',
+                                                                             "died": '1:30',
+                                                                             "location": "7",
+                                                                             "parents":[  {"name": "L1",
+                                                                                           "born": '',
+                                                                                           "died": '',
+                                                                                           "location": ""
+                                                                                           },  
+                                                                                           {"name": "L2",
+                                                                                            "born": '',
+                                                                                            "died": '',
+                                                                                            "location": ""}
+                                                                                        ]
+                                                                            }
+                                                                            ]
+                                                                },
+                                                               {
+                                                                "name": "W8 VS L6",
+                                                                "born": '2:30',
+                                                                "died": '3:00',
+                                                                "location": "11", 
+                                                                "parents": [  {"name": "L6",
+                                                                             "born": '',
+                                                                             "died": '',
+                                                                             "location": ""
+                                                                             },
+                                                                            {"name": "L3 VS L4",
+                                                                             "born": '1:30',
+                                                                             "died": '1:00',
+                                                                             "location": "11",
+                                                                             "parents":[  {"name": "L3",
+                                                                                           "born": '',
+                                                                                           "died": '',
+                                                                                           "location": ""
+                                                                                           },  
+                                                                                           {"name": "L4",
+                                                                                            "born": '',
+                                                                                            "died": '',
+                                                                                            "location": ""}
+                                                                                        ]
+                                                                            }
+                                                                            ]
+                                                               
+                                                                }
+                                                               
+                                                               
+                                                               
+                                                               ]
+                                                   }
+                                                  ]
+                                      }
+                        ]
+            }
+
     return json.dumps(tree)
 
 
