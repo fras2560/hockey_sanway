@@ -791,7 +791,7 @@ def roster_tree(year):
                                  "size":randomNum(20, 40)}
             player_list.append(player_dictionary)
         if player_list == []:
-            team_dictionary['size'] = randomNum(40, 80)
+            team_dictionary['size'] = 10
         else:
             team_dictionary['children'] = player_list
         team_list.append(team_dictionary)
