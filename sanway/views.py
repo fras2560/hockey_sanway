@@ -260,7 +260,7 @@ def teamBio():
 def teamLogin():
     post_url = '/TeamPortal/'
     if 'error' in session:
-        error = session.pop('session',None)
+            error = session.pop('error',None)
     else:
         error = None
     logoutTeam()
@@ -800,74 +800,90 @@ def roster_tree(year):
 
 @app.route('/schedule2')
 def schedule2():
-    return render_template('schedule2.html')
+    return render_template('schedule3.html')
 
 @app.route('/schedule2/tree')
 def schedule_info2():
-    tree = {
-          "name": "Finals",
-          "winners": [
-                      {
-                       "name": "Game 11",
-                       "winners": [
-                                   {"name": "Game 5 ",
-                                    "winners":[
-                                               {"name":"Game 1",
-                                                "winners":[ {"name": "Cock Rockets"},
-                                                           {"name": "Dirt Wheelers"}
-                                                           ]},  
-                                               {"name":"Game 2",
-                                                "winners":[ {"name": "Wheeling Nailer"},
-                                                           {"name": "The Snipeshows"}
-                                                           ]},
-                                               ]
-                                    },{"name": "Game 6 ",
-                                    "winners":[
-                                               {"name":"Game 3",
-                                                "winners":[ {"name": "Blue Team"},
-                                                           {"name": "The Cameltoes"}
-                                                           ]},  
-                                               {"name":"Game 4",
-                                                "winners":[ {"name": "The Bombsquad"},
-                                                           {"name": "Hat Trick Hero"}
-                                                           ]},
-                                               ]
-                                    }
-                                   ]
-                       }
-                      ],                 
-            "challengers": [
-                        {
-                         "name": "Game 13",
-                         "challengers":[
-                                        {"name":"Loser 11"},
-                                        {"name":"Game 12",
-                                         "challengers":[
-                                                        {"name":"Game 9",
-                                                         "challengers":[
-                                                                        {"name":"Loser 5"},
-                                                                        {"name":"Game 7",
-                                                                         "challengers":[
-                                                                                       {"name":"Loser 1"},
-                                                                                       {"name":"Loser 2"}
-                                                                                       ]}
-                                                                        ]},
-                                                        {"name":"Game 10",
-                                                         "challengers":[
-                                                                        {"name":"Loser 6"},
-                                                                        {"name":"Game 8",
-                                                                         "challengers":[
-                                                                                       {"name":"Loser 3"},
-                                                                                       {"name":"Loser 4"}
-                                                                                       ]}
-                                                                        ]
-                                                         }
-                                                        ]}
-                                        ]
-                         }                         
-                      ]
+    game1 = {  
+            "name": "JagrBombs VS W12", "born": '9:30',
+            "died": '10:00', "location": "1"
             }
-    return json.dumps(tree)
+    game2 = {  
+            "name": "Cock Rockets VS Dirt Wheelers","born": '10:00',
+            "died": '10:30', "location": "2"
+            }
+    game3 = {  
+            "name": "Blue Team VS The Cameltoes", "born": '10:30',
+            "died": '11:00', "location": "3"
+            }
+    game4 = {  
+            "name": "The Wheeling Nailers VS W1", "born": '11:00',
+            "died": '11:30', "location": "4 "
+            }
+    game5 = {  
+            "name": "The Bombsquad VS Hat Trick Hero", "born": '11:30',
+            "died": '12:00', "location": "5 "
+            }
+    game6 = {  
+            "name": "L3 VS L1", "born": '12:00',
+            "died": '12:30', "location": "6 "
+            }
+    game7 = {  
+            "name": "W2 VS W3", "born": '12:30',
+            "died": '1:00', "location": "7"
+            }
+    game8 = {  
+            "name": "W4 VS W5", "born": '1:00',
+            "died": '1:30', "location": "8"
+            }
+    game9 = {  
+            "name": "L2 VS W6", "born": '1:30',
+            "died": '2:00', "location": "9"
+            }
+    game10 = {  
+            "name": "L3 VS L4", "born": '2:00',
+            "died": '2:30', "location": "10 "
+            }
+    game11 = {  
+            "name": "W7 VS W8", "born": '2:30',
+            "died": '3:00', "location": "11"
+            }
+    game12 = {  
+            "name": "L5 VS W9", "born": '3:00',
+            "died": '3:30', "location": "12 "
+            }
+    game13 = {  
+            "name": "W10 VS L13", "born": '3:30',
+            "died": '4:00', "location": "13"
+            }
+    game14 = {  
+            "name": "W12 VS W13", "born": '4:00',
+            "died": '4:30', "location": "14 "
+            }
+    game15 = {  
+            "name": "W14 VS L9", "born": '4:30',
+            "died": '5:00', "location": "15 "
+            }
+    game16 = {  
+            "name": "W9  VS W15", "born": '5:00',
+            "died": '6:00', "location": "16 (Finals)"
+            }
+    game9['parents'] = [game6, {"name":"L2","born": '',
+                             "died": '', "location": ""}]
+    game12['parents'] = [game9, {"name":"L5","born": '',
+                             "died": '', "location": ""}]
+    game13['parents'] = [game10, {"name":"L6","born": '',
+                                "died": '', "location": ""}]
+    game14['parents'] = [game12, game13]
+    game15['parents'] = [game14, {"name":"L9","born": '',
+                                  "died": '', "location": ""}]
+    game4['parents'] = [game1]
+    game7['parents'] = [game2, game3]
+    game8['parents'] = [game4, game5]
+    game11['parents'] = [game7, game8]
+    game16['parents'] = [game11, game15]
+    
+    return json.dumps(game16)
 
 @app.route('/schedule')
 def schedule():

@@ -1,8 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>All the Players!</h1>
+<form action="">
+	<input type="text" name="search" value="" id="id_search" placeholder="Search" autofocus />
+</form>
+<table>
+<tbody>
 {% for player in players %}
-<div><p><a href ="/player/{{player.player_id}}"><b>{{player.Name}}</b></a></p></div>
+<tr><td>
+<p><a href ="/player/{{player.player_id}}"><b>{{player.Name}}</b></a></p>
+</td></tr>
 {% endfor %}
+</tbody>
+</table>
+<script src="{{url_for('static', filename="jquery.quicksearch.js") }}"></script>
+<script>
+$('input#id_search').quicksearch('table tbody tr');
+</script>
 {% endblock %}
 <h1>DONE</h1>
