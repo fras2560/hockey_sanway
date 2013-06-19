@@ -805,7 +805,7 @@ def schedule2():
 @app.route('/schedule2/tree')
 def schedule_info2():
     game1 = {  
-            "name": "JagrBombs VS W12", "born": '9:30',
+            "name": "Mooretown VS Snipe Shows", "born": '9:30',
             "died": '10:00', "location": "1"
             }
     game2 = {  
