@@ -2,7 +2,7 @@
 {% block content %}
 <h2>Top Five Leaders</h2>
 <div class="row">
-	<div class="span 4">
+	<div class="span 6">
 	<table class='table table-bordered'>
 		<thead>
 			<tr>
@@ -33,7 +33,7 @@
 		</tbody>
 	</table>
 	</div>
-	<div class="span 4">
+	<div class="span 6">
 	<table class='table table-bordered'>
 		<thead>
 			<tr>
@@ -64,8 +64,9 @@
 		</tbody>
 	</table>
 	</div>
-	
-	<div class="span 4">
+</div>
+<div class="row">	
+	<div class="span 6">
 	<table class='table table-bordered'>
 		<thead>
 			<tr>
@@ -90,6 +91,38 @@
 				</th>
 				<th>
 				{{player.Points}}
+				</th>
+			</tr>
+			{% endfor %}
+			
+		</tbody>
+	</table>
+	</div>
+	<div class="span 6">
+	<table class='table table-bordered'>
+		<thead>
+			<tr>
+				<th>
+				</th>
+				<th>
+				Name
+				</th>
+				<th>
+				Points Per Game
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for player in ppg %}
+			<tr>
+				<th>
+				<img src="player/picture/{{player.player_id}}" class="img-polaroid " width="50" height="50">
+				</th>
+				<th>
+				{{player.Name}}
+				</th>
+				<th>
+				{{player.Points_per_game}}
 				</th>
 			</tr>
 			{% endfor %}

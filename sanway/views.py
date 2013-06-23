@@ -61,11 +61,15 @@ def leaders():
     query = '''SELECT * FROM v_player_stats WHERE Year = %s  
             ORDER BY Points DESC LIMIT 5''' % 2013
     points_leaders = selectAll(query)
+    query = '''SELECT * FROM v_player_stats WHERE Year = %s  
+            ORDER BY Points_per_game DESC LIMIT 5''' % 2013
+    ppg = selectAll(query)
     return render_template('leader.html',
                            goal_leaders=goal_leaders,
                            years=years,
                            points_leaders=points_leaders,
-                           assist_leaders=assist_leaders
+                           assist_leaders=assist_leaders,
+                           ppg=ppg
                            )     
 
 @app.route('/picture/<int:id>')
@@ -762,7 +766,7 @@ def tree():
             team_dictionary['size'] = 0
         else:
             team_dictionary['children'] = player_list
-        team_list.append(team_dictionary)
+            team_list.append(team_dictionary)
     tree['children'] = team_list
     return json.dumps(tree)
 
