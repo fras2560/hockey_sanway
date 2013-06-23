@@ -21,32 +21,41 @@
 	<div class="container">
     	<div class="navbar">
   			<div class="navbar-inner">
-	 			<a class="brand" href="/index">Home</a>
-     			<a class="brand" href="/players">Players</a>
-     			<a class="brand" href="/teams">Teams</a>
-     			<a class="brand" href="/news">News</a>
-				<a class="brand" href="/playerBio/">Player Page</a>
-				<a class="brand" href="/teamBio/">Team Page</a>     			
-    			<a class="brand" href="/leaders">Leaders</a>
-    			<a class="brand" href="/stats">Stats</a> 
-    			<a class="brand" href="/championships">Champs</a>     			
-    			<a class="brand" href="/roster/graph">Roster Graph</a>
-    			<a class="brand" href="/player/graph">Goals Graph</a>
-    			     			
-    			<div class="btn-group">
-				  <a class="btn btn-primary btn-small dropdown-toggle" data-toggle="dropdown" href="#">
-					Want to Join?
-				    <span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu">
-   					<!-- dropdown menu links -->
-   					<a href="/team/join">Start Team</a> 
-   					<a href="/player/join">Start Player Account</a>
-   					 
-					</ul>
-					</div>
-    			     			
-    		 </div>
+  				<ul id="tab" class="nav">
+                        <li><a href="/index" data-toggle="tab">Home</a></li>
+                        <li><a href="/news" data-toggle="tab">News</a></li>
+                        <li><a href="/championships" data-toggle="tab">Champs</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Player <b class="caret"></b></a>
+	                        <ul class="dropdown-menu">
+		                        <li><a href="/players">List Players</a></li>
+		                        <li><a href="/player/join">Sign Up</a></li>
+		                        <li><a href="/playerBio/">View/Update your Profile</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Teams <b class="caret"></b></a>
+	                        <ul class="dropdown-menu">
+		                         <li><a href="/teams">List Teams</a></li>
+		                         <li><a href="/team/join">Create a Team</a></li>
+		                         <li><a href="/teamBio/">Update Team</a></li>
+		                    </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stats <b class="caret"></b></a>
+	                        <ul class="dropdown-menu">
+                          		<li><a href="/leaders">Leaders</a></li>
+                         		 <li><a href="/stats">All Players</a></li>
+                        	</ul>
+                        </li>
+					   <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Teams <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+                          		<li><a href="/roster/graph">Roster Graph</a></li>
+                          		<li><a href="/player/graph">Goals Graph</a></li>
+                    		</ul>
+                        </li>
+  			</div>
 		</div> 
     </div>
 	
@@ -64,5 +73,11 @@
 	<a class="btn btn-mini btn-link " href="http://twitter.github.io/bootstrap/">Bootstrap</a>
 	<a class="btn btn-mini btn-link " href="http://flask.pocoo.org/">Flask</a>
 	<a class="btn btn-mini btn-link " href="http://d3js.org/">D3</a>
+
+<script>
+$('.dropdown-toggle').dropdown()
+</script>
+
+
 </html>
 
