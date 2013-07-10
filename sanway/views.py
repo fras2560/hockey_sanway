@@ -471,7 +471,10 @@ def teamViewTrade():
                         ''' %(trade_id, team_id) 
         dictionary['PlayersReceiving'] = selectAll(player_sql)
         Offertrades.append(dictionary)
-
+    if len(Offertrades)==0:
+        Offertrades = None
+    if len(Owntrades)==0:
+        Owntrades = None
     return render_template('view_trade.html',
                            Offertrades=Offertrades,
                            Owntrades=Owntrades)
@@ -904,6 +907,7 @@ def writeTradeNews(dict):
     string = '''Trade: %s has trade %s in exchange  
             for %s from %s''' %(keys[0], t1, t2 , keys[1])
     writeNews(string)
+
 def writeNews(string):
     query = "INSERT INTO News (news) VALUES ('%s')" % string 
     process(query)

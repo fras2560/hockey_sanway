@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
 <h4>Your Proposed Trades</h4>
-{% if Owntrades.length ==0 %}
+{% if not Owntrades: %}
 	<p>None available at the moment</p>
 {% else %}
 	<table class="table table-hover">
@@ -49,9 +49,9 @@
 		{% endfor %}
 	</table>
 {% endif %}
-<h4>Offered TRADES</h4>
-{% if Offertrades.length == 0 %}
-<p> None at the moment </p>
+<h4>Offered Trades</h4>
+{% if not Offertrades: %}
+<p> None available at the moment </p>
 {% else %}
 	<table class="table table-hover">
 	{% for trade in Offertrades %}
