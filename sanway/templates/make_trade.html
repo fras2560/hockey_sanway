@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="control-group">
+	<label class="control-label" for="">Pick Trading Team</label>
+    <div class="controls">
+    	<select name="player_id" id="teamSelect">
+  			{% for team in teams %}
+			<option value="/team/trade/make/{{team.team_id}}" >{{team.team_name}}</option>
+			{% endfor %}
+		</select>
+	</div>
+	<button type="submit" class="btn btn-danger" onclick="newTrade()">New Trade</button>
+</div>
+<div class="container" id="mainContainer">
+	<div class="span10">
+		<div class="span4">
+			<h4>Your Team</h4>
+			<select class="chosen" multiple="true" style="width:400px;" title="Player to Trade" id="homeSelect">
+				{%for player in home_team %}
+				<option value="{{player.player_id}}" class="homeSelectOption">{{player.player_name}}</option>
+				{% endfor %}
+			</select>	
+		</div>
+		<div class="span4" id='awayContainer'>
+			<h4>Trading Team</h4>
+		</div>
+		<a href="#submitModal" role="button" class="btn btn-primary" data-toggle="modal">Make Trade</a>	
+	</div>
+</div>
+
+<div class="modal hide fade" id="submitModal">
+  <div class="modal-header">
+    <h3>Submitting Trades</h3>
+  </div>
+  <div class="modal-body">
+  	<h5 class="confirmClass">Confirm Trade</h5>
+  	<h4 id='tradeStatus'></h4>
+  	<button class="btn btn-mini btn-success confirmClass" aria-hidden="true" onclick="makeTrade()" id="modalYesBtn">Yes</button>
+  	<button class="btn btn-mini btn-warning confirmClass" data-dismiss="modal" aria-hidden="true" id="modalNoBtn">No</button>
+    <center><img src="{{url_for('static', filename="ajax-loader.gif")}}" id="loadingGif" /></center>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true" id="modalCloseBtn">Close</button>
+  </div>
+</div>
+
+		
+<link href="{{ url_for('static', filename="asmselect/jquery.asmselect.css") }}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{{ url_for('static', filename="jquery.js") }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename="asmselect/jquery.asmselect.js") }}"></script>
+<script type="text/javascript">
+	$( document ).ready(function() {
+    	console.log( "ready!" );
+    	$('#mainContainer').hide();
+    	$('#homeSelect').asmSelect();
+	});
+	var away_id;
+	function newTrade(){
+		$('#modalCloseBtn').hide();
+    	$('#loadingGif').hide();
+    	$('#tradeStatus').text('');
+    	$('.confirmClass').show();
+		$('#mainContainer').show();
+		var ajax_page = $("#teamSelect").val();
+        var temp_id = $("#teamSelect").val();
+     	away_id = temp_id.substring(17);
+		console.log('Ajax Page', ajax_page);
+		$.ajax(
+                {
+                      type: "POST",
+                      url: ajax_page,
+                      data: {},
+                      dataType: "html",
+                      success: function(results)
+                      {
+                    	  deleteTeam();
+                    	 
+                    	  var refined_results = JSON.parse(results);
+                    	  console.log("Results:",refined_results)
+                    	  for (var pos=0;pos<refined_results.length;pos++){
+                    		  makeRow(refined_results[pos])
+                    	  }
+                    	  $('#awaySelect').asmSelect()
+                      }, error: function(request, error){                                  
+                    	  console.log("ERROR", error)
+                      }
+                }
+               );
+	}
+	
+	function makeTrade(){
+		$('.confirmClass').hide();
+		$('#loadingGif').show();
+		var ajax_page = 'submit'
+		var home_id = {{home_id}}
+		var home_players = new Array();
+		var away_players = new Array();
+		var temp;
+		console.log('Away_id:',away_id)
+		$('#awaySelect option').each(function() {
+			if ($(this).is(':selected')){
+				temp = $(this).val()
+				away_players.push(temp)
+				console.log('Away Player',temp )
+			}
+		});
+		$('#homeSelect option').each(function() {
+			if ($(this).is(':selected')){
+				temp = $(this).val()
+				home_players.push(temp)
+				console.log('Home Player',temp )
+			}
+		});
+		console.log('Home Player list', home_players)
+		console.log('Away Player list', away_players)		
+		$.ajax(
+				{
+			 	   type: "POST",
+			 	   contentType: "application/json",
+			 	   url: ajax_page,
+			 	   data: JSON.stringify({"home_id":home_id, "away_id":away_id,
+			 		   					 "home_players":home_players,
+			 		   					 "away_players":away_players}),
+                   dataType: "json",
+                   success: function(results)
+                   {
+                	  console.log('Result', results)
+                	  $('#loadingGif').hide();
+                	  if ((results == true) || (results == 'true')){
+                 		$('#tradeStatus').text('Successfully Submitted Trade')	  
+                 	  }else{
+                 		$('#tradeStatus').text('Failed!!!!')
+                 	  }
+                	  $('#modalCloseBtn').show()
+                	  
+                   }, error: function(request, error){                                  
+                 	   console.log("ERROR", error)
+                 	   $('#modalCloseBtn').show()
+                 	   $('#loadingGif').hide();
+                 	   $('#tradeStatus').text('Failed:ERROR!!!!')
+                   }					
+				}
+			  );
+	}
+	
+	function makeRow(player){
+		console.log('Player:', player)
+		var id = player[0];
+		var name = player[1]
+		var player_option = '<option class="teamSelectOption" value="'+id +'">'+ name + '</option>'
+		console.log('Player option',player_option)
+		$("#awaySelect").append(player_option);
+	}
+	
+	function deleteTeam(){
+		
+		console.log('Delete Team')
+		$('#asmContainer1').remove()
+		$('#awaySelect')
+	    .find('option')
+	    .remove()
+	    $('#awayContainer').append('<select class="chosen" multiple="true" style="width:400px;" id="awaySelect" title="Player to Trade For" ></select>')
+	}
+
+</script>
+{% endblock %}
+	

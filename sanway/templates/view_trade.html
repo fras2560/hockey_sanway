@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+<h4>Your Proposed Trades</h4>
+{% if Owntrades.length ==0 %}
+	<p>None available at the moment</p>
+{% else %}
+	<table class="table table-hover">
+		{%for trade in Owntrades %}
+		<tr>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+						Players to be Trades
+						</th>
+						<th>
+						Players to Received from {{trade.teamTo}}
+						</th>
+						
+						<th>
+						Status
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+						<ul>
+						{% for player in trade.PlayersGivingUp %}
+							<li>{{player.player_name}}</li>
+						{% endfor %}
+						</ul>
+						</td>
+						<td>
+						<ul>
+						{% for player in trade.PlayersReceiving %}
+							<li>{{player.player_name}}</li>
+						{% endfor %}
+						</ul>
+						</td>
+						<td>
+						{{trade.status}}
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</tr>
+		{% endfor %}
+	</table>
+{% endif %}
+<h4>Offered TRADES</h4>
+{% if Offertrades.length == 0 %}
+<p> None at the moment </p>
+{% else %}
+	<table class="table table-hover">
+	{% for trade in Offertrades %}
+		<tr>
+			<table class="table" id="{{trade.trade_id}}Table">
+				<thead>
+					<tr>
+						<th>
+						Players to be Trades
+						</th>
+						<th>
+						Players to Received from {{trade.teamTo}}
+						</th>
+						
+						<th>
+						Status
+						</th>
+						<th>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+						<ul>
+						{% for player in trade.PlayersGivingUp %}
+							<li>{{player.player_name}}</li>
+						{% endfor %}
+						</ul>
+						</td>
+						<td>
+						<ul>
+						{% for player in trade.PlayersReceiving %}
+							<li>{{player.player_name}}</li>
+						{% endfor %}
+						</ul>
+						</td>
+						<td>
+						{{trade.status}}
+						</td>
+						<td>
+						<button class="btn btn-mini btn-success" onclick="acceptTrade({{trade.trade_id}})">Accept Trade</button>
+						<button class="btn btn-mini btn-warning" onclick="declineTrade({{trade.trade_id}})">Decline Trade</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</tr>
+	{% endfor %}
+{% endif %}
+
+</table>
+</div>
+<div class="modal hide fade" id="submitModal">
+  <div class="modal-header">
+    <h3>Accepting Trades</h3>
+  </div>
+  <div class="modal-body">
+  	<h4 id='tradeStatus'></h4>
+    <center><img src="{{url_for('static', filename="ajax-loader.gif")}}" id="loadingGif" /></center>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true" id="modalCloseBtn">Close</button>
+  </div>
+</div>
+
+<script>
+function acceptTrade(id){
+	console.log("Accepting:",id)
+	var ajax_page = "/team/trade/confirm"
+	$('#loadingGif').show();
+	$('#tradeStatus').text('Accepting trade')
+	$('#modalCloseBtn').hide()
+	$('#submitModal').modal('show')
+	$.ajax(
+			{
+		 	   type: "POST",
+		 	   contentType: "application/json",
+		 	   url: ajax_page,
+		 	   data: JSON.stringify({"trade_id":id}),
+               dataType: "json",
+               success: function(results)
+               {
+            	   $('#loadingGif').hide();
+            	  if ((results == true) || (results == 'true')){
+             		$('#tradeStatus').text('Successfully Accepting Trade')	  
+             	  }else{
+             		$('#tradeStatus').text('Failed!!!!')
+             	  }
+            	  $('#modalCloseBtn').show()
+            	  $('#'+id+'Table').hide();
+               }, error: function(request, error){                                  
+             	   console.log("ERROR", error)
+             	   $('#modalCloseBtn').show()
+             	   $('#loadingGif').hide();
+             	   $('#tradeStatus').text('Failed:ERROR!!!!')
+             	  $('#'+id+'Table').hide();
+               }					
+			}
+		  );	
+}
+function declineTrade(id){
+	console.log("Declining:",id)
+	var ajax_page = "/team/trade/delete";
+	$('#loadingGif').show();
+	$('#tradeStatus').text('Rejecting trade')
+	$('#modalCloseBtn').hide()
+	$('#submitModal').modal('show')
+	$.ajax(
+			{
+		 	   type: "POST",
+		 	   contentType: "application/json",
+		 	   url: ajax_page,
+		 	   data: JSON.stringify({"trade_id":id}),
+               dataType: "json",
+               success: function(results)
+               {
+             	  $('#loadingGif').hide();
+            	  if ((results == true) || (results == 'true')){
+             		$('#tradeStatus').text('Successfully Rejected Trade')	  
+             	  }else{
+             		$('#tradeStatus').text('Failed!!!!')
+             	  }
+            	  $('#modalCloseBtn').show()
+            	  $('#'+id+'Table').hide();
+            	  
+               }, error: function(request, error){                                  
+             	   console.log("ERROR", error)
+             	   $('#modalCloseBtn').show()
+             	   $('#loadingGif').hide();
+             	   $('#tradeStatus').text('Failed:ERROR!!!!')
+             	  $('#'+id+'Table').hide();
+               }					
+			}
+		  );
+}
+
+</script>
+{% endblock %}

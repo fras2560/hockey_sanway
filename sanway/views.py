@@ -9,8 +9,8 @@ from db import selectAll, selectOne, process, insertPicture, processArgs
 from flask import request
 from flask import url_for
 from flask import session
+from flask import json
 from datetime import date
-import json
 import datetime
 from random import randint
 # index view function suppressed for brevity
@@ -104,7 +104,6 @@ def index():
                            captions=captions
                            )
 
-
 @app.route('/news/')
 @app.route('/news')
 def news():
@@ -116,14 +115,12 @@ def news():
                            events=events
                            )
 
-
 @app.route('/about')
 @app.route('/about/')
 def about():
     return render_template('about.html',
                            title="About"
                            )
-
 
 @app.route('/teamLogout')
 @app.route('/teamLogout/')
@@ -177,7 +174,6 @@ def updateTeamBio():
     session['action'] = 'Bio Update'
     return redirect(url_for('teamBio'))
 
-
 @app.route('/teams/')
 @app.route('/teams')
 def teams():
@@ -187,7 +183,6 @@ def teams():
                            title='Teams',
                            teams=teams
                            )
-
 
 @app.route('/teams/<int:id>')
 @app.route('/teams/<int:id>/')
@@ -225,7 +220,6 @@ def teamPicture(id):
         imageBlob = picture['picture']
     return imageBlob
 
-
 @app.route('/teamBio/')
 @app.route('/teamBio')
 def teamBio():
@@ -257,7 +251,6 @@ def teamBio():
                                )
     else:
         return redirect(url_for('teamLogin'))
-
 
 @app.route('/teamSignIn', methods=['GET', 'POST'])
 @app.route('/teamSignIn/', methods=['GET', 'POST'])
@@ -351,6 +344,189 @@ def teamPicForm():
                            type='Team',
                            action='/team/upload/')
 
+@app.route('/team/trade/make/<int:id>', methods=['GET', 'POST'])
+def teamGetRosterTrade(id):
+    sql = '''SELECT * FROM v_team_roster 
+            WHERE team_id = %s AND Year = Year(CURDATE());
+            ''' % id
+    team = selectAll(sql)
+    team_list = []
+    for player in team:
+        team_list.append([player['player_id'],player['player_name']])
+    return json.dumps(team_list)
+   
+@app.route('/team/trade/submit', methods=['GET','POST'])
+def teamMakeTradeSubmit():
+    print("submit")
+    if request is None:
+        print("None")
+        return json.dumps(False)
+    results = json.loads(request.data)
+    home_id = results['home_id']
+    away_id = results['away_id']
+    home_players = results['home_players']
+    away_players = results['away_players']
+    now = datetime.datetime.now()
+    date = now.strftime("%Y-%m-%d")
+    create_trade = ''' INSERT INTO trade 
+                    (team_id_1, team_id_2, date, status ) 
+                    VALUES ('%s', '%s', now(), 'CREATING');        
+                    ''' % (home_id, away_id)
+    process(create_trade)
+    trade_query = '''SELECT * FROM trade WHERE 
+                    team_id_1 = '%s' AND
+                    team_id_2 = '%s' AND
+                    status = 'CREATING' 
+                  ''' % (home_id, away_id)
+    print(date)
+    trade_result = selectOne(trade_query)              
+    trade_id =  trade_result['trade_id']
+    for player in home_players:
+        trade_row = ''' INSERT INTO Trade_Player_List 
+                    (player_id, trade_id, team_to)
+                    VALUES (%s, %s, %s)
+                    ''' %(player, trade_id,away_id  )
+        process(trade_row)
+    for player in away_players:
+        trade_row = ''' INSERT INTO Trade_Player_List 
+                    (player_id, trade_id, team_to)
+                    VALUES ('%s', '%s', '%s')
+                    ''' %(player, trade_id, home_id )
+        process(trade_row)
+    query = '''SELECT * FROM tradeDetails_view'''
+    results =  selectAll(query)
+    print(results)
+    update_trade = '''UPDATE trade SET `status`='PENDING' WHERE `trade_id`=%s
+                   ''' % trade_id
+    process(update_trade)
+    return json.dumps(True)
+
+@app.route('/team/trade/', methods=['GET','POST'])
+def teamCheckTrade():
+    if 'team_id' not in session:
+        return json.dumps(False)
+    team_id = session['team_id']
+    check = '''SELECT * FROM trade 
+            WHERE team_id_2 = %s 
+            AND status = '%s' ''' %(team_id, 'PENDING')
+    results = selectAll(check)
+    if len(results) > 0:
+        return json.dumps(True)
+    else:
+        return json.dumps(False)
+
+@app.route('/team/trade/make')
+def teamMakeTrade():
+    if 'team_id' not in session:
+        return redirect(url_for('teamLogin'))
+    team_id = session['team_id']
+    sql = '''SELECT * FROM v_team_roster 
+            WHERE team_id = %s AND Year = Year(CURDATE());
+            ''' % team_id
+    home_team = selectAll(sql)
+    sql = '''SELECT * FROM Team WHERE team_id != %s''' % team_id
+    teams = selectAll(sql)
+    return render_template('make_trade.html',
+                           home_team = home_team,
+                           teams = teams,
+                           home_id = team_id)
+
+@app.route('/team/trade/view', methods=['GET','POST'])
+def teamViewTrade():
+    if 'team_id' not in session:
+        return redirect(url_for('teamLogin'))
+    team_id = session['team_id']
+    their_trades_sql = ''' SELECT * FROM view_trade 
+                        WHERE ProposingTeamId= %s ''' % team_id
+    their_trades = selectAll(their_trades_sql)
+    Owntrades = []
+    for trade in their_trades:
+        dictionary = {"teamTo":trade['ReceivingTeam'],
+                      'status':trade['status']}
+        trade_id = trade['Trade']
+        player_sql = '''SELECT * FROM tradeDetails_view 
+                        WHERE trade_id =%s AND team_to!=%s
+                        ''' %(trade_id, team_id)
+        dictionary['PlayersGivingUp'] = selectAll(player_sql)
+        player_sql = '''SELECT * FROM tradeDetails_view 
+                        WHERE trade_id =%s AND team_to=%s
+                        ''' %(trade_id, team_id) 
+        dictionary['PlayersReceiving'] = selectAll(player_sql)
+        Owntrades.append(dictionary)
+    their_trades_sql = ''' SELECT * FROM view_trade 
+                        WHERE ReceivingTeamId= %s AND status='PENDING' ''' % team_id
+    their_trades = selectAll(their_trades_sql)
+    Offertrades = []
+    for trade in their_trades:
+        dictionary = {"teamTo":trade['ProposingTeam'],
+                      'status':trade['status'],
+                      "trade_id":trade['Trade']}
+        trade_id = trade['Trade']
+        player_sql = '''SELECT * FROM tradeDetails_view 
+                        WHERE trade_id =%s AND team_to!=%s
+                        ''' %(trade_id, team_id)
+        dictionary['PlayersGivingUp'] = selectAll(player_sql)
+        player_sql = '''SELECT * FROM tradeDetails_view 
+                        WHERE trade_id =%s AND team_to=%s
+                        ''' %(trade_id, team_id) 
+        dictionary['PlayersReceiving'] = selectAll(player_sql)
+        Offertrades.append(dictionary)
+
+    return render_template('view_trade.html',
+                           Offertrades=Offertrades,
+                           Owntrades=Owntrades)
+
+@app.route('/team/trade/delete', methods=['GET','POST'])
+def teamCancelTrade():
+    if 'team_id' not in session:
+        return json.dumps(False)
+    try:
+        results = json.loads(request.data)
+        trade_id = results['trade_id']
+        update_trade = '''UPDATE trade
+                        SET status='REJECTED'
+                        WHERE trade_id = %s
+                        ''' % trade_id
+        process(update_trade)
+        return json.dumps(True)
+    except:
+        return json.dumps(True)
+
+@app.route('/team/trade/confirm', methods=['GET','POST'])
+def teamConfirmTrade():
+    if request is None:
+        print("None")
+        return json.dumps(False)
+    try:
+        results = json.loads(request.data)
+        trade_id = results['trade_id']
+        proposing_sql = '''SELECT * FROM tradeDetails_view WHERE trade_id = %s;
+                            ''' % trade_id
+        results = selectAll(proposing_sql)
+        news_dictionary = {}
+        for player in results:
+            team = player['team_name']
+            if (team in news_dictionary ):
+                news_dictionary [team].append(player['player_name'])
+            else:
+                news_dictionary [team] = [player['player_name']]
+            delete_sql = '''DELETE FROM Team_Roster WHERE player_id = %s 
+                            AND year = Year(CURDATE());
+                            ''' % player['player_id']
+            insert_sql = '''INSERT INTO Team_Roster (team_id, player_id, year) 
+                                VALUES (%s, %s, Year(CURDATE()));
+                             ''' % (player['team_to'], player['player_id'])
+            process(delete_sql)
+            process(insert_sql)
+        update_trade = '''UPDATE trade
+                        SET status='MADE'
+                        WHERE trade_id = %s
+                        ''' % trade_id
+        process(update_trade)
+        writeTradeNews(news_dictionary)
+        return json.dumps(True)
+    except:
+        return json.dumps(False)
 
 @app.route('/team/upload', methods=['GET', 'POST'])
 @app.route('/team/upload/', methods=['GET', 'POST'])
@@ -370,7 +546,6 @@ def insertTeamPic():
     else:
         session['error'] = "File Failed"
         return redirect(url_for('teamBio'))
-
 
 @app.route('/TeamPortal/', methods=['POST', 'GET'])
 def TeamPortal():
@@ -420,7 +595,6 @@ def teamJoinForm():
                            post='team',
                            error=error)
 
-
 @app.route('/team/help/', methods=['GET', 'POST'])
 def teamJoin():
     if request.form['user'] and request.form['pw']:
@@ -445,9 +619,6 @@ def teamJoin():
     news = "%s is the new team to beat in the league" % user
     writeNews(news)
     return redirect(url_for('teamBio'))
-
-
-
 
 @app.route('/player/join')
 def playerJoinForm():
@@ -484,7 +655,6 @@ def playerJoin():
     news = "%s has joined the league" % user
     writeNews(news)
     return redirect(url_for('playerBio'))
-
 
 @app.route('/player/<int:id>')
 def playerPage(id):
@@ -574,7 +744,6 @@ def updateBio():
     session['error'] = result
     session['action'] = 'Update Player Bio'
     return redirect(url_for('playerBio'))
-
     
 @app.route('/players')
 @app.route('/players/')
@@ -720,6 +889,21 @@ def playerGraph():
                            year=year)
 
 
+def writeTradeNews(dict):
+    keys = []
+    for key in dict:
+        keys.append(key)
+    t1 = ''
+    for player in dict[keys[0]]:
+        t1 = t1 + player + ','
+    t2 = ''
+    for player in dict[keys[1]]:
+        t2 = t2 + player + ','
+    
+    
+    string = '''Trade: %s has trade %s in exchange  
+            for %s from %s''' %(keys[0], t1, t2 , keys[1])
+    writeNews(string)
 def writeNews(string):
     query = "INSERT INTO News (news) VALUES ('%s')" % string 
     process(query)
