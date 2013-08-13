@@ -961,9 +961,17 @@ def tree():
 @app.route('/roster/graph')
 def rosterGraph():
     now = datetime.datetime.now()
-    year = now.year
+    sql = '''SELECT DISTINCT year FROM Team_Roster
+            ORDER BY year ASC '''
+    years_sql = selectAll(sql)
+    years = []
+    for year in years_sql:
+        years.append(year['year'])
+    current_sql = selectOne(sql)
+    current = current_sql['year']
     return render_template('rosterGraph.html',
-                           year=year)
+                           current=current,
+                           years=years)
 
 
 @app.route('/roster/graph/info/<int:year>')
