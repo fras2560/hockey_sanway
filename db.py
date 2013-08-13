@@ -6,16 +6,17 @@ Created on 2013-05-21
 import MySQLdb
 
 def selectAll(querytext): 
-    connection=MySQLdb.connect(user="fras2560",passwd="Lcc17pet",db="fras2560",
+    connection=MySQLdb.connect(user="fras2560",passwd="**********",db="fras2560",
                                host="hopper.wlu.ca")
     cursor=connection.cursor(MySQLdb.cursors.DictCursor)
     #print (querytext)
     cursor.execute(querytext)
     answer=cursor.fetchall()
     connection.close()
-    return answer
+    return answer
+
 def selectOne(querytext):
-    connection=MySQLdb.connect(user="fras2560",passwd="Lcc17pet",db="fras2560",
+    connection=MySQLdb.connect(user="fras2560",passwd="***********",db="fras2560",
                                host="hopper.wlu.ca")
     cursor=connection.cursor(MySQLdb.cursors.DictCursor)
     #print (querytext)
@@ -26,7 +27,7 @@ def selectOne(querytext):
 
 
 def process (querytext):
-    connection=MySQLdb.connect(user="fras2560",passwd="Lcc17pet",db="fras2560",
+    connection=MySQLdb.connect(user="fras2560",passwd="*************",db="fras2560",
                                host="hopper.wlu.ca")
     cursor=connection.cursor(MySQLdb.cursors.DictCursor)
     print (querytext)
@@ -39,7 +40,7 @@ def process (querytext):
     return
 
 def processArgs(query, item, id):
-    connection = MySQLdb.connect(user="fras2560", passwd="Lcc17pet",
+    connection = MySQLdb.connect(user="fras2560", passwd="***********",
                                  db="fras2560", host="hopper.wlu.ca")
     cursor = connection.cursor(MySQLdb.cursors.DictCursor)
     args = [item, id]
@@ -52,9 +53,10 @@ def processArgs(query, item, id):
     except:
         connection.rollback()
         result = 'FAILURE'
-    return result     
+    return result
+     
 def insertPicture (query, file, id):
-    connection = MySQLdb.connect(user="fras2560", passwd="Lcc17pet",
+    connection = MySQLdb.connect(user="fras2560", passwd="**********",
                                  db="fras2560", host="hopper.wlu.ca")
     cursor = connection.cursor(MySQLdb.cursors.DictCursor)
     args = (file, id)
