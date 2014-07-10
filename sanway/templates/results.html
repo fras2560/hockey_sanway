@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block content %}
+<meta charset="utf-8">
+<style>
+
+text {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.about {
+  fill: #777;
+  font-size: smaller;
+}
+
+.link {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+</style>
+<h1>
+Sanway 2013 Games
+</h1>
+<table class="table table-hover">
+	<thead>
+		<th>Game Number</th>
+		<th>Score</th>
+		<th>Details</th>
+	</thead>
+	<tbody>
+	{% for game in games %}
+		<tr>
+			<td>{{game.gameId}}</td>
+			<td>({{game.Home_Score}}) <a href="/teams/{{game.HomeId}}">{{game.Home}}</a> VS ({{game.Away_Score}}) <a href="/teams/{{game.AwayId}}">{{game.Away}}</a> </td>
+			<td><button class="btn btn-info btn-small" onclick="showGame({{game.gameId}} , '{{game.Home}}', '{{game.Away}}')">Show</button></td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+<div class="modal hide fade" id="submitModal">
+  <div class="modal-header">
+    <h3>Game Details</h3>
+    <h2 id="ErrorHeader"></h2>
+    <center><img src="{{url_for('static', filename="ajax-loader.gif")}}" id="loadingGif" /></center>
+    
+  </div>
+  <div class="modal-body">
+	<div class="container-fluid">
+	  <div class="row-fluid">
+	    <div class="span6">
+			<h5 id="modalHomeTeam">Home Team:</h5>
+			<table id='HomeTable'>
+			</table>
+	    </div>
+	   	<div class="span6">
+			<h5 id="modalAwayTeam">Away Team:</h5>
+			<table id='AwayTable'>
+			</table>
+	    </div>
+	  </div>
+	</div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true" id="modalCloseBtn">Close</button>
+  </div>
+</div>
+
+
+<script>
+	function showGame(gameId, home, away){
+		$('#modalHomeTeam').text('Home Team:' + home);
+		$('#modalAwayTeam').text('Away Team:' + away);
+		$('#AwayTable').empty();
+		$('#HomeTable').empty();
+		$('#ErrorHeader').text('');
+	  	$('#submitModal').modal('show')
+	  	$('loadingGif').show();
+		var ajax_page = '/results/'+gameId;
+		$.ajax(
+                {
+                      type: "POST",
+                      url: ajax_page,
+                      data: {},
+                      dataType: "html",
+                      success: function(data)
+                      {
+                    	var results = JSON.parse(data)
+					  	console.log('Results:', results)
+					  	var row = '';
+					  	for (var pos=0;pos<results.home.length;pos++){
+					  		row = '<tr><td>';
+					  		console.log(results)
+					  		if (results.home[pos].Time != null){
+					  			row += results.home[pos].time + ' - ' 
+					  		}
+					  		row += results.home[pos].GoalScorer
+					  		if(results.home[pos].Assist != null){
+					  			row += '(' + results.home[pos].Assist +')'
+					  		}else{
+					  			row += ' (Unassisted)'
+					  		}
+					  		row += '</td></tr>';
+					  		console.log(row);
+					  		$('#HomeTable').append(row)
+					  	}
+					  	for(var pos=0;pos<results.away.length;pos++){
+					  		row = '<tr><td>';
+					  		console.log(results)
+					  		if (results.away[pos].Time != null){
+					  			row += results.away[pos].time + ' - ' 
+					  		}
+					  		row += results.away[pos].GoalScorer
+					  		if(results.away[pos].Assist != null){
+					  			row += '(' + results.away[pos].Assist +')'
+					  		}else{
+					  			row += ' (Unassisted)'
+					  		}
+					  		row += '</td></tr>';
+					  		console.log(row);
+					  		$('#AwayTable').append(row)					  		
+					  	}
+					  	$('#loadingGif').hide();
+                      }, error: function(request, error){                                  
+                    	  console.log("ERROR", error)
+                    	  $('#ErrorHeader').text('Unable to load Details');
+                    	  $('#loadingGif').hide();
+                      }
+                });
+	}
+	
+</script>
+{% endblock %}
